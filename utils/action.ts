@@ -10,9 +10,11 @@ type User = {
   lastName: string;
 };
 
-export const createUser = async (formData: FormData) => {
+export const createUser = async (prevState: any, formData: FormData) => {
   'use server';
 
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+  console.log(prevState);
   const firstName = formData.get('firstName') as string;
   const lastName = formData.get('lastName') as string;
   //   const rawData = Object.fromEntries(formData);
@@ -20,13 +22,14 @@ export const createUser = async (formData: FormData) => {
   console.log('create user', firstName, lastName);
   const newUser: User = { firstName, lastName, id: Date.now().toString() };
   try {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
     await saveUser(newUser);
     revalidatePath('/actions');
     //do not put redirect inside try block, it will cause error
     //redirect('/');
+    return 'User created sucessfully';
   } catch (error) {
     console.log(error);
+    return 'Something went wrong creating user...';
   }
   //revalidatePath('/actions');
   //redirect('/');
@@ -43,3 +46,13 @@ const saveUser = async (user: User) => {
   users.push(user);
   writeFileSync('users.json', JSON.stringify(users));
 };
+
+export const deleteUser = async (formData: FormData) => {
+  const id = formData.get('id') as string;
+  const users = await fetchUsers();
+  const updatedUsers = users.filter((user) => user.id !== id);
+  writeFileSync('users.json', JSON.stringify(updatedUsers));
+  revalidatePath('/actions');
+};
+
+export const removeUser = async (formData: FormData) => {};
