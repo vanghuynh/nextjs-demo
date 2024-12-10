@@ -1,6 +1,8 @@
 'use server';
 
 import { readFile, writeFile, readFileSync, writeFileSync } from 'fs';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 type User = {
   id: string;
@@ -17,7 +19,17 @@ export const createUser = async (formData: FormData) => {
   //   console.log('rawData', rawData);
   console.log('create user', firstName, lastName);
   const newUser: User = { firstName, lastName, id: Date.now().toString() };
-  await saveUser(newUser);
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await saveUser(newUser);
+    revalidatePath('/actions');
+    //do not put redirect inside try block, it will cause error
+    //redirect('/');
+  } catch (error) {
+    console.log(error);
+  }
+  //revalidatePath('/actions');
+  //redirect('/');
 };
 
 export const fetchUsers = async (): Promise<User[]> => {
