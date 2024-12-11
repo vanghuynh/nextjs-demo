@@ -4,7 +4,7 @@ import { readFile, writeFile, readFileSync, writeFileSync } from 'fs';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-type User = {
+export type User = {
   id: string;
   firstName: string;
   lastName: string;

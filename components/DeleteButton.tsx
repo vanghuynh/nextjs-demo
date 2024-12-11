@@ -1,3 +1,4 @@
+'use client';
 import { deleteUser, removeUser } from '../utils/action';
 
 const DeleteButton = ({ id }: { id: string }) => {

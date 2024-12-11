@@ -1,12 +1,12 @@
-import { fetchUsers } from '../utils/action';
+import { User } from '../utils/action';
 import DeleteButton from './DeleteButton';
 
-const UsersList = async () => {
-  const users = await fetchUsers();
+function UsersList({ users }: { users: User[] }) {
+  //const users = await fetchUsers();
   return (
     <div className='mt-4'>
       {users.length ? (
-        <div>
+        <div className='max-w-lg'>
           {users.map((user) => {
             return (
               <h4
@@ -24,6 +24,6 @@ const UsersList = async () => {
       )}
     </div>
   );
-};
+}
 
 export default UsersList;
